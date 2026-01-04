@@ -1,5 +1,11 @@
 from rlm.rlm_repl import RLM_REPL
 import random
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+MODEL = os.getenv("MODEL", "gemini-3-pro-preview")
+RECURSIVE_MODEL = os.getenv("RECURSIVE_MODEL", "gemini-3-pro-preview")
 
 def generate_massive_context(num_lines: int = 1_000_000, answer: str = "1298418") -> str:
     print("Generating massive context with 1M lines...")
@@ -22,13 +28,13 @@ def generate_massive_context(num_lines: int = 1_000_000, answer: str = "1298418"
     return "\n".join(lines)
 
 def main():
-    print("Example of using RLM (REPL) with GPT-5-nano on a needle-in-haystack problem.")
+    print("Example of using RLM (REPL) with Gemini-3-flash on a needle-in-haystack problem.")
     answer = str(random.randint(1000000, 9999999))
     context = generate_massive_context(num_lines=1_000_000, answer=answer)
 
     rlm = RLM_REPL(
-        model="gpt-5-nano",
-        recursive_model="gpt-5",
+        model=MODEL,
+        recursive_model=RECURSIVE_MODEL,
         enable_logging=True,
         max_iterations=10
     )

@@ -8,24 +8,29 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Optional
+from dotenv import load_dotenv
 
 from rlm import RLM
+
+load_dotenv()
+MODEL = os.getenv("MODEL", "gemini-3-pro-preview")
+RECURSIVE_MODEL = os.getenv("RECURSIVE_MODEL", "gemini-3-pro-preview")
 
 # Simple sub LM for REPL environment. Note: This could also be just the RLM itself!
 class Sub_RLM(RLM):
     """Recursive LLM client for REPL environment with fixed configuration."""
     
-    def __init__(self, model: str = "gpt-5"):
+    def __init__(self, model: str = MODEL):
         # Configuration - model can be specified
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.api_key = os.getenv("GOOGLE_API_KEY")
         if not self.api_key:
-            raise ValueError("OPENAI_API_KEY environment variable is required")
+            raise ValueError("GOOGLE_API_KEY environment variable is required")
         
         self.model = model
 
-        # Initialize OpenAI client
-        from rlm.utils.llm import OpenAIClient
-        self.client = OpenAIClient(api_key=self.api_key, model=model)
+        # Initialize Gemini client
+        from rlm.utils.llm import GeminiClient
+        self.client = GeminiClient(api_key=self.api_key, model=model)
         
     
     def completion(self, prompt) -> str:
@@ -71,7 +76,7 @@ class REPLResult:
 class REPLEnv:
     def __init__(
         self,
-        recursive_model: str = "gpt-5-mini",
+        recursive_model: str = RECURSIVE_MODEL,
         context_json: Optional[dict | list] = None,
         context_str: Optional[str] = None,
         setup_code: str = None,

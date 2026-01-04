@@ -1,0 +1,11 @@
+[project]
+name = "rlm-minimal"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv>=0.9.9",
+    "google-genai>=1.56.0",
+    "rich>=14.2.0",
+]

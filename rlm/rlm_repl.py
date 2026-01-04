@@ -6,13 +6,19 @@ from typing import Dict, List, Optional, Any
 
 from rlm import RLM
 from rlm.repl import REPLEnv
-from rlm.utils.llm import OpenAIClient
+from rlm.utils.llm import GeminiClient
 from rlm.utils.prompts import DEFAULT_QUERY, next_action_prompt, build_system_prompt
 import rlm.utils.utils as utils
 
 from rlm.logger.root_logger import ColorfulLogger
 from rlm.logger.repl_logger import REPLEnvLogger
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+MODEL = os.getenv("MODEL", "gemini-3-pro-preview")
+RECURSIVE_MODEL = os.getenv("RECURSIVE_MODEL", "gemini-3-pro-preview")
 
 class RLM_REPL(RLM):
     """
@@ -21,8 +27,8 @@ class RLM_REPL(RLM):
     
     def __init__(self, 
                  api_key: Optional[str] = None, 
-                 model: str = "gpt-5",
-                 recursive_model: str = "gpt-5",
+                 model: str = MODEL,
+                 recursive_model: str = RECURSIVE_MODEL,
                  max_iterations: int = 20,
                  depth: int = 0,
                  enable_logging: bool = False,
@@ -30,7 +36,7 @@ class RLM_REPL(RLM):
         self.api_key = api_key
         self.model = model
         self.recursive_model = recursive_model
-        self.llm = OpenAIClient(api_key, model) # Replace with other client
+        self.llm = GeminiClient(api_key, model) # Replace with other client
         
         # Track recursive call depth to prevent infinite loops
         self.repl_env = None
